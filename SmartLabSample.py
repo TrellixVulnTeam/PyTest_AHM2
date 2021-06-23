@@ -15,9 +15,9 @@ import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 
 
-shareName = "F"
+shareName = "LEVI"
 
-daysBefore = 60
+daysBefore = 360
 endDate = da.today()
 startDate = endDate- ti(daysBefore)
 
@@ -27,7 +27,7 @@ n2 = 16
 
 yf.pdr_override()  # это магия
 dt = pdr.get_data_yahoo(shareName, startDate, endDate)  # скачиваем
-print(dt.head(10))  # смотрим первые 10 строк
+#print(dt.head(10))  # смотрим первые 10 строк
 
 # построение графика акции
 # plt.figure(figsize=(13,8)) #размеры графика
@@ -55,9 +55,11 @@ plt.figure(figsize=(13, 8))  # размеры графика
 plt.xlabel(str(startDate) + " to " + str(endDate))
 plt.ylabel("Price")
 plt.title("Share: " + shareName)
-plt.plot(dt['Adj Close'], label='Adj Close Price', color='black')
+plt.plot(dt['Adj Close'], label='Adj Close Price', color='gray')
 plt.plot(EMA_1['Adj Close'], label="EMA " + str(n1), color='red')
 plt.plot(EMA_2['Adj Close'], label="EMA " + str(n2), color='blue')
+#plt.plot(SMA_1['Adj Close'], label="SMA " + str(n1), color='orange')
+#plt.plot(SMA_2['Adj Close'], label="SMA " + str(n2), color='green')
 plt.legend(loc='upper left')
 plt.show()
 
