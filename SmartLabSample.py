@@ -14,9 +14,9 @@ import matplotlib.pyplot as plt
 
 plt.style.use('fivethirtyeight')
 
-shareName = "T"
+shareName = "LEVI"
 
-daysBefore = 30
+daysBefore = 60
 endDate = da.today()
 startDate = endDate - ti(daysBefore)
 #startDate = '2021-01-01'
@@ -55,18 +55,18 @@ EMA_3 = pd.DataFrame()  # создание пустого датафрейма
 EMA_3['Adj Close'] = dt['Adj Close'].ewm(span=n3, adjust=False).mean()
 
 # добавление скользящих поверх графика
-plt.figure(figsize=(13, 8))  # размеры графика
-plt.xlabel(str(startDate) + " to " + str(endDate))
-plt.ylabel("Price")
-plt.title("Share: " + shareName)
-plt.plot(dt['Adj Close'], label='Adj Close Price', color='gray')
-plt.plot(EMA_1['Adj Close'], label="EMA " + str(n1), color='red')
-plt.plot(EMA_2['Adj Close'], label="EMA " + str(n2), color='blue')
-# plt.plot(EMA_3['Adj Close'], label="EMA " + str(n3), color='green')
-# plt.plot(SMA_1['Adj Close'], label="SMA " + str(n1), color='orange')
-# plt.plot(SMA_2['Adj Close'], label="SMA " + str(n2), color='green')
-plt.legend(loc='upper left')
-plt.show()
+#plt.figure(figsize=(13, 8))  # размеры графика
+#plt.xlabel(str(startDate) + " to " + str(endDate))
+#plt.ylabel("Price")
+#plt.title("Share: " + shareName)
+#plt.plot(dt['Adj Close'], label='Adj Close Price', color='gray')
+#plt.plot(EMA_1['Adj Close'], label="EMA " + str(n1), color='red')
+#plt.plot(EMA_2['Adj Close'], label="EMA " + str(n2), color='blue')
+## plt.plot(EMA_3['Adj Close'], label="EMA " + str(n3), color='green')
+## plt.plot(SMA_1['Adj Close'], label="SMA " + str(n1), color='orange')
+## plt.plot(SMA_2['Adj Close'], label="SMA " + str(n2), color='green')
+#plt.legend(loc='upper left')
+#plt.show()
 
 # Алгоритм формирования сигналов
 df = pd.DataFrame()
@@ -79,7 +79,7 @@ df['EMA_2'] = EMA_2['Adj Close']
 
 # для оценки результата используем флаговую переменную со значениями
 # flag -1 = sell    0 = no cross yet   1 = buy
-def dual_sma(df):
+def dual_ema(df):
     # пустые листы в которые алгоритм будет записывать  цены при сигнале
     buy_signal_price = []
     sell_signal_price = []
@@ -109,4 +109,25 @@ def dual_sma(df):
         else:
             buy_signal_price.append(np.nan)
             sell_signal_price.append(np.nan)
-        return (buy_signal_price,sell_signal_price)
+    return (buy_signal_price,sell_signal_price)
+
+
+#сохранение результатов
+dual_ema=dual_ema(df)
+df['Buy signal price'] = dual_ema[0]
+df['Sell signal price'] = dual_ema[1]
+print(df)
+
+#визуализация стратегии
+
+plt.figure(figsize=(13, 8))  # размеры графика
+plt.xlabel(str(startDate) + " to " + str(endDate))
+plt.ylabel("Price")
+plt.title("Share: " + shareName)
+plt.plot(dt['Adj Close'], label='Adj Close Price', color='gray', linewidth=3)
+plt.plot(EMA_1['Adj Close'], label="EMA " + str(n1), color='red', linewidth=2)
+plt.plot(EMA_2['Adj Close'], label="EMA " + str(n2), color='blue', linewidth=2)
+plt.scatter(df.index, df['Buy signal price'], label = 'buy', color = 'green', marker='^', s=200)
+plt.scatter(df.index, df['Sell signal price'], label = 'sell', color = 'red', marker='v', s=200)
+plt.legend(loc='upper left')
+plt.show()
