@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 
 plt.style.use('fivethirtyeight')
 
-shareName = "LEVI"
+shareName = "BNGO"
 
 daysBefore = 60
 endDate = da.today()
